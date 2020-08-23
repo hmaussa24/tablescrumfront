@@ -3,8 +3,8 @@ import { AppBar, Toolbar, Typography, makeStyles, IconButton, Button } from '@ma
 import MenuIcon from "@material-ui/icons/Menu";
 const useStyles = makeStyles(theme => ({
     offset: theme.mixins.toolbar,
-    title : {
-        flexGrow : 1
+    title: {
+        flexGrow: 1
     }
 }));
 
@@ -17,9 +17,14 @@ export const NavBar = () => {
                     <IconButton edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" className={clases.title}>
-                        Table Scrum
-                </Typography>
+                    <Typography variant="h6" className={clases.title} href='/'>
+                        <Button variant="text" color="inherit" href='/'>
+                            Table Scrum
+                         </Button>
+                    </Typography>
+                    <Button variant="text" color="inherit" href='/registro'>
+                        Registrate
+                   </Button>
                 </Toolbar>
             </AppBar>
             <div className={clases.offset}></div>

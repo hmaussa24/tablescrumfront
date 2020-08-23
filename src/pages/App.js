@@ -15,20 +15,13 @@ import Container from '@material-ui/core/Container';
 import theme from '../theme';
 import { NavBar } from '../Components/NavBar';
 import { withStyles } from '@material-ui/core/styles';
-import Axios from 'axios';
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
+import Axios from '../services/http';
+import baseUrl from '../services/baseUrl';
+import Copyright from '../Components/Copi';
+import { connect } from 'react-redux';
+import * as TodoAccion from '../store/actions';
+import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router';
 const useStyles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -54,8 +47,11 @@ class SignIn extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '', };
-
+    this.state = { email: '', password: '', login: false};
+    let login = this.props.state.map(key => {
+      this.state.login =  key.user.login
+    })
+    console.log(this.state.login);
     this.handleChangEmail = this.handleChangEmail.bind(this);
     this.handleChangePwd = this.handleChangePwd.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -69,23 +65,30 @@ class SignIn extends React.Component {
     this.setState({ password: event.target.value });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    Axios.post('http://127.0.0.1:8000/api/auth/login', {
+    let date = await Axios.post(baseUrl + 'login', {
       email: this.state.email,
       password: this.state.password,
     })
       .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
+        this.props.authLogin(res.data.access_token);
+        //console.log(this.props.state)
+        let login = this.props.state.map(key => {
+          this.state.login =  key.user.login
+        })
+        window.location ='/home'
+      }, (err => {
+        alert('Usuario o contraseña incorrectos.');
+      }))
   }
 
   render() {
     const { classes } = this.props;
+    let login = this.state.login;
     return (
-
       <ThemeProvider theme={theme}>
+        { login && <Redirect to='/home'></Redirect>}
         <NavBar />
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -157,22 +160,8 @@ class SignIn extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(SignIn);
-
-
-
-/*
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <NavBar/>
-        <Button variant='contained' color='primary' >Boton</Button>
-      </div>
-
-    </ThemeProvider>
-
-  );
-}
-
-export default App;*/
+const mapDispatchToProps = dispatch => bindActionCreators(TodoAccion, dispatch);
+const mapStateToProps = state => ({
+  state: state.Auth
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(SignIn));
