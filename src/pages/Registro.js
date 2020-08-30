@@ -12,13 +12,15 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { NavBar } from '../Components/NavBar';
+import  NavBar  from '../Components/NavBar';
 import Copyright from '../Components/Copi';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import * as TodoAccion from '../store/actions';
 import { connect } from 'react-redux';
 import theme from '../theme';
+import  Axios  from "../services/http";
+import baseUrl from '../services/baseUrl';
 const useStyles = theme => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -39,9 +41,44 @@ const useStyles = theme => ({
     },
 });
 
+
 class SignUp extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { name: '', email: '', password: '', password_confirmation: '' };
+        this.handleChangName = this.handleChangName.bind(this);
+        this.handleChangEmail = this.handleChangEmail.bind(this);
+        this.handleChangePwd = this.handleChangePwd.bind(this);
+        this.handleChangePwdR = this.handleChangePwdR.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleChangName(event) {
+        this.setState({ name: event.target.value });
+    }
+    handleChangEmail(event) {
+        this.setState({ email: event.target.value });
+    }
+    handleChangePwd(event) {
+        this.setState({ password: event.target.value });
+    }
+    handleChangePwdR(event) {
+        this.setState({ password_confirmation: event.target.value });
+    }
+    async handleSubmit(event) {
+        event.preventDefault();
+        let date = await Axios.post(baseUrl + 'register', this.state)
+            .then(res => {
+                //console.log(res.data)
+                //window.location = '/home'
+                if(res.data){
+                    window.location = '/' 
+                }else{
+                    
+                }
+            }, (err => {
+                alert('No se completo el registro.');
+            }))
+
     }
     render() {
         const { classes } = this.props;
@@ -57,29 +94,19 @@ class SignUp extends React.Component {
                         <Typography component="h1" variant="h5">
                             Sign up
                         </Typography>
-                        <form className={classes.form} noValidate>
+                        <form className={classes.form} onSubmit={this.handleSubmit}>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12}>
                                     <TextField
                                         autoComplete="fname"
-                                        name="firstName"
+                                        name="name"
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        id="firstName"
-                                        label="First Name"
+                                        id="name"
+                                        label="Nombre:"
                                         autoFocus
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="lastName"
-                                        label="Last Name"
-                                        name="lastName"
-                                        autoComplete="lname"
+                                        onChange={this.handleChangName}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -88,9 +115,10 @@ class SignUp extends React.Component {
                                         required
                                         fullWidth
                                         id="email"
-                                        label="Email Address"
+                                        label="Email"
                                         name="email"
                                         autoComplete="email"
+                                        onChange={this.handleChangEmail}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -99,10 +127,24 @@ class SignUp extends React.Component {
                                         required
                                         fullWidth
                                         name="password"
-                                        label="Password"
+                                        label="Contraseña"
                                         type="password"
                                         id="password"
                                         autoComplete="current-password"
+                                        onChange={this.handleChangePwd}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password_confirmation"
+                                        label="Re-Contraseña"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        onChange={this.handleChangePwdR}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -119,12 +161,12 @@ class SignUp extends React.Component {
                                 color="primary"
                                 className={classes.submit}
                             >
-                                Sign Up
+                                Registrar
                             </Button>
                             <Grid container justify="flex-end">
                                 <Grid item>
-                                    <Link href="#" variant="body2">
-                                        Already have an account? Sign in
+                                    <Link href="/" variant="body2">
+                                        Ya estas registrado? Iniciar Sesion
                                     </Link>
                                 </Grid>
                             </Grid>

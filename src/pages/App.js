@@ -13,15 +13,14 @@ import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import theme from '../theme';
-import { NavBar } from '../Components/NavBar';
+import  NavBar  from '../Components/NavBar';
 import { withStyles } from '@material-ui/core/styles';
 import Axios from '../services/http';
 import baseUrl from '../services/baseUrl';
 import Copyright from '../Components/Copi';
 import { connect } from 'react-redux';
-import * as TodoAccion from '../store/actions';
-import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router';
+import { authLogin } from '../store/actions/';
 const useStyles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -47,11 +46,27 @@ class SignIn extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '', login: false};
-    let login = this.props.state.map(key => {
-      this.state.login =  key.user.login
-    })
-    console.log(this.state.login);
+    this.state = { email: '', password: '', login: false };
+    // let login = this.props.state.map(key => {
+    //   // if (typeof key.user.login != 'undefined') {
+    //   //   this.state.login = key.user.login
+    //   // }
+    //   //console.log(key.user.login);
+    //   this.state.login = key.user.login
+    // })
+    //console.log(this.props.state[0].user);
+    if (typeof this.props.login.state != 'undefined') {
+      this.state.login = this.props.login
+      //console.log(this.props.login);
+      let login = this.props.login.state.map(key => {
+        // if (typeof key.user.login != 'undefined') {
+        //   this.state.login = key.user.login
+        // }
+        console.log(key);
+        this.state.login = key.login
+      })
+    }
+
     this.handleChangEmail = this.handleChangEmail.bind(this);
     this.handleChangePwd = this.handleChangePwd.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -72,12 +87,13 @@ class SignIn extends React.Component {
       password: this.state.password,
     })
       .then(res => {
+        localStorage.setItem('jwt_token', res.data.access_token)
         this.props.authLogin(res.data.access_token);
-        //console.log(this.props.state)
-        let login = this.props.state.map(key => {
-          this.state.login =  key.user.login
-        })
-        window.location ='/home'
+        //console.log(this.props.login)
+        // let login = this.props.state.map(key => {
+        //   this.state.login = key.user.login
+        // })
+        window.location = '/home'
       }, (err => {
         alert('Usuario o contraseña incorrectos.');
       }))
@@ -88,7 +104,7 @@ class SignIn extends React.Component {
     let login = this.state.login;
     return (
       <ThemeProvider theme={theme}>
-        { login && <Redirect to='/home'></Redirect>}
+        {login && <Redirect to='/home'></Redirect>}
         <NavBar />
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -160,8 +176,20 @@ class SignIn extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(TodoAccion, dispatch);
-const mapStateToProps = state => ({
-  state: state.Auth
-});
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(SignIn));
+//const mapDispatchToProps = dispatch => bindActionCreators(TodoAccion, dispatch);
+function mapDispatchToProps(dispatch) {
+  return {
+    authLogin: token => dispatch(authLogin(token))
+  };
+}
+
+const mapStateToProps = state => {
+  return { login: state.Auth };
+};
+
+const Login = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignIn);
+
+export default withStyles(useStyles)(Login);

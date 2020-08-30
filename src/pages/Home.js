@@ -1,34 +1,50 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
-import * as TodoAccion from '../store/actions';
-import { bindActionCreators } from 'redux';
+import { ThemeProvider } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
-class Home extends React.Component {
+import theme from '../theme';
+import { useStyles } from '../Components/css';
+import ProyecList from '../Components/ProyectList';
+import Boton from '../Components/Boton';
+import NavBarAmin from '../Components/NavBarAdmin';
+function Home() {
+    const classes = useStyles(theme);
+    //const theme = useTheme();
 
 
-    constructor(props) {
-        super(props);
-        this.handleSalir = this.handleSalir.bind(this);
-    }
+    return (
+        <ThemeProvider theme={theme}>
+            <div className={classes.root}>
+            <NavBarAmin useStyles={classes}></NavBarAmin>
+                <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <Typography className={classes.title}>
+                        Tus proyectos
+                    </Typography>
+                   <Boton color='primary' label='Agregar Proyecto' url='/setproyecto'></Boton>
+                        <div className={classes.offset}></div>
+                    <ProyecList></ProyecList>
+                    
 
-  handleSalir(){
-  console.log('Salir')
-  this.props.authLogOut(localStorage.getItem('jwt_token'));
-  window.location = '/'
-  }
-
-    render() {
-        const { classes } = this.props;
-        return (
-            <Button variant="text" color="default" onClick={this.handleSalir}>
-              salir
-            </Button>
-        );
-    }
+                </main>
+            </div>
+        </ThemeProvider>
+    );
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(TodoAccion, dispatch);
-const mapStateToProps = state => ({
-  state: state.Auth
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+function mapDispatchToProps(dispatch) {
+    return {
+        //authLogOut: token => dispatch(authLogOut(token))
+    };
+}
+
+const mapStateToProps = state => {
+    return { login: state.Auth };
+};
+
+const HomeD = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);
+
+export default (HomeD);

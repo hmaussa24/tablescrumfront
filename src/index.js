@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Rutas from './pages/Rutas';
 import { Provider } from 'react-redux';
-import { store, persistor} from './store';
+import stores from './store';
 import { PersistGate } from "redux-persist/integration/react";
+
+const {store, persistor} = stores();
+ 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
