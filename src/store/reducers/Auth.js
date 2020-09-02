@@ -1,27 +1,30 @@
-import Axios from '../../services/http';
-import baseUrl from '../../services/baseUrl';
-import { profile } from '../actions';
+import { profile } from "../actions";
 
-const initialState = {
-  };
+const initialState = [{
+    user: [],
+    profile: []
+}];
 
 
 
-export default function todos(state = [], action) {
+export default function todos(state = {}, action) {
     switch (action.type) {
         case 'LOGIN':
-            
+
             // state.user.token = action.token;
             // state.user.login = true;
-            const user = {
-                token : action.token,
-                login : true
-            }
-            return Object.assign({}, state, {
-                state : state.concat(user),
-              });
+            // const user = [
+            //     token => action.token,
+            //     login => true
+            // ]
             // console.log(state)
-            // return state;
+            // return [...state, {user: user}]
+
+            return {
+                ...state, sesion: { token: action.token, login: true },
+            }
+        // console.log(state)
+        // return state;
         case 'LOGOUT':
             // //console.log(loginAuthReg(action.token))
             // state.user.login = action.token
@@ -32,7 +35,20 @@ export default function todos(state = [], action) {
             // //console.log(loginAuthReg(action.token))
             // const profile = loginAuthReg(action.token);
             // state = [{ user: { profile: profile} }]
-            return state;
+            // const dataProfile = {
+            //     profile : action.prof
+            // }
+            //console.log(state);
+            // return Object.assign(state, {
+            //     profile : dataProfile,
+            //   });
+            // return Object.assign({}, state, {
+            //     state : state.concat(dataProfile),
+            //   });
+
+            return {
+                ...state, user: action.prof,
+            }
         default:
             return state;
     }

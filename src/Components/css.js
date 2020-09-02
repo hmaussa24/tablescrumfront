@@ -65,7 +65,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   offset: theme.mixins.toolbar,
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    fontSize: '30px',
+    marginBottom: '20px'
   },
   mergenizq: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',

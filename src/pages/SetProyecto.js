@@ -8,7 +8,7 @@ import NavBarAmin from '../Components/NavBarAdmin';
 import { Container, CssBaseline, Grid, TextField, Button, Box } from '@material-ui/core';
 import Axios from '../services/http';
 import baseUrl from '../services/baseUrl';
-function Home() {
+function Home(props) {
     const classes = useStyles(theme);
     //const theme = useTheme();
     const [name, setName] = useState('');
@@ -18,10 +18,13 @@ function Home() {
        event.preventDefault();
        //console.log(description)
        Axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('jwt_token')}`;
-       let proyecto = await Axios.post(baseUrl+'registerproyecto',{name: name, description : description, user_id : 1})
+       let proyecto = await Axios.post(baseUrl+'registerproyecto',
+       {name: name, description : description, user_id : props.login.user.id})
        .then(resposnse=>{
-            console.log(resposnse)
+        props.history.push('/home')
+            //console.log(resposnse)
        }, error =>{
+            alert(error);
             console.log(error)
        })
     };
@@ -38,7 +41,7 @@ function Home() {
     return (
         <ThemeProvider theme={theme}>
             <div className={classes.root}>
-            <NavBarAmin useStyles={classes}></NavBarAmin>
+            <NavBarAmin useStyles={classes} user={props.login.user}></NavBarAmin>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Typography className={classes.title}>

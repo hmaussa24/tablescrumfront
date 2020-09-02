@@ -13,14 +13,14 @@ import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import theme from '../theme';
-import  NavBar  from '../Components/NavBar';
+import NavBar from '../Components/NavBar';
 import { withStyles } from '@material-ui/core/styles';
 import Axios from '../services/http';
 import baseUrl from '../services/baseUrl';
 import Copyright from '../Components/Copi';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import { authLogin } from '../store/actions/';
+import { authLogin, profile } from '../store/actions/';
 const useStyles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -55,17 +55,24 @@ class SignIn extends React.Component {
     //   this.state.login = key.user.login
     // })
     //console.log(this.props.state[0].user);
-    if (typeof this.props.login.state != 'undefined') {
-      this.state.login = this.props.login
-      //console.log(this.props.login);
-      let login = this.props.login.state.map(key => {
-        // if (typeof key.user.login != 'undefined') {
-        //   this.state.login = key.user.login
-        // }
-        console.log(key);
-        this.state.login = key.login
-      })
-    }
+    // if (typeof this.props.login.state != 'undefined') {
+    //   this.state.login = this.props.login
+    //   //console.log(this.props.login);
+    //   let login = this.props.login.state.map(key => {
+    //     // if (typeof key.user.login != 'undefined') {
+    //     //   this.state.login = key.user.login
+    //     // }
+    //     //console.log(key);
+    //     this.state.login = key.login
+    //   })
+
+      
+    // }
+
+    if(typeof props.login.sesion != 'undefined'){
+      //console.log(props.login)
+      this.state.login = props.login.sesion.login;
+  }
 
     this.handleChangEmail = this.handleChangEmail.bind(this);
     this.handleChangePwd = this.handleChangePwd.bind(this);
@@ -80,8 +87,20 @@ class SignIn extends React.Component {
     this.setState({ password: event.target.value });
   }
 
+  async handleProfile(token){
+    Axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    let prof = await Axios.get(baseUrl + 'profile').
+    then(response =>{
+      //console.log(response.data);
+      this.props.profile(response.data);
+    }, (error => {
+      console.log(error);
+    }));
+  }
+
   async handleSubmit(event) {
     event.preventDefault();
+    let loginBandera = false;
     let date = await Axios.post(baseUrl + 'login', {
       email: this.state.email,
       password: this.state.password,
@@ -89,14 +108,27 @@ class SignIn extends React.Component {
       .then(res => {
         localStorage.setItem('jwt_token', res.data.access_token)
         this.props.authLogin(res.data.access_token);
+        loginBandera = true
         //console.log(this.props.login)
         // let login = this.props.state.map(key => {
         //   this.state.login = key.user.login
         // })
-        window.location = '/home'
+        //this.handleProfile(localStorage.getItem('jwt_token'));
+        //console.log(this.props);
+        // this.setState({
+        //   login: true,
+        // })
       }, (err => {
         alert('Usuario o contraseña incorrectos.');
       }))
+
+      if(loginBandera === true){
+        //console.log(this.state.login)
+        await  this.handleProfile(localStorage.getItem('jwt_token'));
+        this.setState({
+          login: true,
+        })
+      }
   }
 
   render() {
@@ -179,7 +211,8 @@ class SignIn extends React.Component {
 //const mapDispatchToProps = dispatch => bindActionCreators(TodoAccion, dispatch);
 function mapDispatchToProps(dispatch) {
   return {
-    authLogin: token => dispatch(authLogin(token))
+    authLogin: token => dispatch(authLogin(token)),
+    profile: prof => dispatch(profile(prof)),
   };
 }
 

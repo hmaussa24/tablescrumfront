@@ -3,6 +3,11 @@
     color: #ffffff;
 }
 
+.link-grupo{
+  text-decoration: none;
+  color: #1f1f1f;
+}
+
 .link-global{
     text-decoration: none;
     color: #323232;

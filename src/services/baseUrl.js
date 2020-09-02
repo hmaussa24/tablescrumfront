@@ -1,2 +1,2 @@
-const baseUrl = 'http://127.0.0.1:8000/api/auth/';
+const baseUrl = 'http://localhost/tablescrum/public/api/auth/';
 export default baseUrl;

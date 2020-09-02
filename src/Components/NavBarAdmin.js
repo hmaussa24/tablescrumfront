@@ -16,6 +16,7 @@ class NavBarAmin extends React.Component {
         super(props)
 
         this.state = { open: false }
+        //console.log(this.props.user)
     }
     //const[open, setOpen] = React.useState(false);
 
@@ -57,7 +58,7 @@ class NavBarAmin extends React.Component {
                             <Typography variant="h6" noWrap className={classes.title}>
                                 Table Scrum
           </Typography>
-                            <Menu menu={true} />
+                            <Menu menu={true} user={this.props.user}/>
                         </Toolbar>
 
                     </AppBar>

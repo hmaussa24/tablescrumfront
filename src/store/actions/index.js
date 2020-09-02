@@ -9,7 +9,7 @@ export const authLogOut = token => ({
 });
 
 
-export const profile  = token => ({
+export const profile  = prof => ({
   type: "PROFILE",
-  token
-})
+  prof
+});

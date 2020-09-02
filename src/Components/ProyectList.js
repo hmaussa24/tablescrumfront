@@ -8,13 +8,16 @@ import { connect } from 'react-redux';
 import { withStyles, Button, Box, ButtonGroup } from '@material-ui/core';
 import baseUrl from '../services/baseUrl';
 import Axios from '../services/http';
+import Boton from '../Components/Boton';
 import '../css/styles.css'
 const useStyles = theme => ({
     root: {
-        width: '100%',
+        width: '60%',
+        textAlign: "center",
+        margin: 'auto',
     },
     heading: {
-        fontSize: theme.typography.pxToRem(15),
+        fontSize: theme.typography.pxToRem(20),
         flexBasis: '33.33%',
         flexShrink: 0,
     },
@@ -22,6 +25,10 @@ const useStyles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
+
+    margenes: {
+        marginTop: '10px',
+    }
 });
 
 class Projects extends React.Component {
@@ -54,7 +61,7 @@ class Projects extends React.Component {
                 loading: false,
                 data: data,
             })
-            console.log(this.state.data.data.proyectos)
+            //console.log(this.state.data.data.proyectos)
         } catch (error) {
             this.setState({
                 loading: false,
@@ -73,7 +80,7 @@ class Projects extends React.Component {
         const { classes } = this.props;
         //const[expanded, setExpanded] = this.useState(false);
         if (this.state.loading === true) {
-            return (<div class="lds-dual-ring"></div>)
+            return (<div className="lds-dual-ring"></div>)
         }
         if (this.state.error) {
             return (
@@ -85,7 +92,7 @@ class Projects extends React.Component {
         return (
             <div className={classes.root}>
                 {this.state.data.data.proyectos.map((pro) => (
-                    <Accordion key={pro.id} expanded={this.state.expanded === pro.id} onChange={this.handleChange(pro.id)}>
+                    <Accordion className={classes.margenes} key={pro.id} expanded={this.state.expanded === pro.id} onChange={this.handleChange(pro.id)}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1bh-content"
@@ -99,10 +106,12 @@ class Projects extends React.Component {
                                 {pro.description}
                             </Typography>
                             <div className={classes.root}></div>
-                            <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
-                                <Button>One</Button>
-                                <Button>Two</Button>
-                                <Button>Three</Button>
+                            <ButtonGroup size="large" variant="outlined" color="primary" aria-label="large outlined primary button group">
+                                <Boton link='link-grupo' url='/home' label='Equipo' />
+                                <Boton link='link-grupo' url='/home' label='BackLog' />
+                                <Boton link='link-grupo' url='/home' label='Sprint' />
+                                {/* <Button>Two</Button>
+                                <Button>Three</Button> */}
                             </ButtonGroup>
                         </AccordionDetails>
                     </Accordion>

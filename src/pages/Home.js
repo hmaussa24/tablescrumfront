@@ -7,29 +7,51 @@ import { useStyles } from '../Components/css';
 import ProyecList from '../Components/ProyectList';
 import Boton from '../Components/Boton';
 import NavBarAmin from '../Components/NavBarAdmin';
-function Home() {
+import { Redirect } from 'react-router';
+function Home(props) {
     const classes = useStyles(theme);
     //const theme = useTheme();
-
-
-    return (
-        <ThemeProvider theme={theme}>
-            <div className={classes.root}>
-            <NavBarAmin useStyles={classes}></NavBarAmin>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <Typography className={classes.title}>
-                        Tus proyectos
-                    </Typography>
-                   <Boton color='primary' label='Agregar Proyecto' url='/setproyecto'></Boton>
+    let login = false;
+    // if (typeof props.login.state != 'undefined') {
+    //     props.login.state.map(key => {
+    //         // if (typeof key.user.login != 'undefined') {
+    //         //   this.state.login = key.user.login
+    //         // }
+    //         //console.log(key);
+    //         login = key.login
+    //     })
+    // }
+    if(typeof props.login.sesion != 'undefined'){
+        //console.log(props.login)
+        login = props.login.sesion.login;
+    }
+    //console.log(props.login.user)
+    if (login === true) {
+        return (
+            <ThemeProvider theme={theme}>
+                
+                <div className={classes.root}>
+                    <NavBarAmin useStyles={classes} user={props.login.user}></NavBarAmin>
+                    <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        <Typography className={classes.title}>
+                            Tus proyectos
+                        </Typography>
+                        <Boton variant='contained' color='primary' label='Agregar Proyecto' url='/setproyecto' link='link'></Boton>
                         <div className={classes.offset}></div>
-                    <ProyecList></ProyecList>
-                    
+                        <ProyecList></ProyecList>
 
-                </main>
-            </div>
-        </ThemeProvider>
-    );
+
+                    </main>
+                </div>
+            </ThemeProvider>
+        );
+    }else{
+        return(
+            <Redirect to='/'></Redirect>
+        )
+    }
+
 }
 
 function mapDispatchToProps(dispatch) {

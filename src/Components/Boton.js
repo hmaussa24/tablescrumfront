@@ -15,5 +15,5 @@ const useStyles = makeStyles({
 
 export default function Hook(props) {
   const classes = useStyles();
-return (<Button color={props.color} variant="contained" className={classes.root}><Link className='link' to={props.url}>{props.label}</Link></Button>)
+return (<Button color={props.color} variant={props.variant} className={classes.root}><Link className={props.link} to={props.url}>{props.label}</Link></Button>)
 }

@@ -72,8 +72,8 @@ const useStyles = theme => ({
 
 function NavBar(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-
-
+    const [name , setName] = React.useState(props.user);
+    //console.log(name);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -89,7 +89,7 @@ function NavBar(props) {
         window.location = '/'
     }
 
-    console.log(props)
+    //console.log(props)
     const { classes } = props;
     if (props.menu === true) {
         return (
@@ -97,7 +97,7 @@ function NavBar(props) {
                 <div>
                     <Typography variant="h6" className={classes.title} href='/'>
                         <Button variant="text" color="inherit" onClick={handleClick}>
-                            {props.nombre}
+                            {name.name}
                             <ArrowForwardIosIcon></ArrowForwardIosIcon>
                         </Button>
                     </Typography>
